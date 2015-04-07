@@ -58,8 +58,12 @@ class FindTop5Words(webapp2.RequestHandler):
         self.response.write(HTML_PREFIX)
         self.response.write("<table class=\"ex\"><tr><td>")
         self.response.write("<br><p class=\"page_title\">SIGGRAPH Paper Title Word Clouds</p>\n")
-        self.response.write("<p>A very poor attempt to identify trends in graphics research.</p>")
-        self.response.write("<p>Using data from Ke-Sen Huang's page. <a href=\"https://github.com/ap1/siggraph-wordcloud\">Source</a>.</p><br>\n")
+        self.response.write("<p>A very poor attempt to identify trends in graphics research.</p>\n")
+        self.response.write("<strong>Notes</strong><ul>\n")
+        self.response.write("<li>Using data from <a href=\"http://kesen.realtimerendering.com\">Ke-Sen Huang's page</a>. For source of this script, <a href=\"https://github.com/ap1/siggraph-wordcloud\">click here</a>.</li>\n")
+        self.response.write("<li>Words ignored: %s</li>\n" % ((", ").join(sorted(CommonWords))))
+        self.response.write("<li>If you use this tool, please respect Ke-Sen's bandwidth limits and only run it a few times, offline.</li>\n")
+        self.response.write("</ul>\n")
         rawWords = "<ul>"
         for Year in Years:
           try:
@@ -83,14 +87,14 @@ class FindTop5Words(webapp2.RequestHandler):
               elif(freq > 0.9):   fontSizePc = 200
               elif(freq > 0.8):   fontSizePc = 180
               elif(freq > 0.7):   fontSizePc = 150
-              elif(freq > 0.6):   fontSizePc = 130
-              elif(freq > 0.5):   fontSizePc = 110
-              elif(freq > 0.4):   fontSizePc = 100
-              elif(freq > 0.3):   fontSizePc = 90
-              elif(freq > 0.2):   fontSizePc = 75
-              elif(freq > 0.1):   fontSizePc = 60
-              elif(freq > 0.05):  fontSizePc = 50
-              else:               fontSizePc = 30
+              elif(freq > 0.6):   fontSizePc = 125
+              elif(freq > 0.5):   fontSizePc = 100
+              elif(freq > 0.4):   fontSizePc = 70
+              elif(freq > 0.3):   fontSizePc = 50
+              elif(freq > 0.2):   fontSizePc = 30
+              elif(freq > 0.1):   fontSizePc = 20
+              elif(freq > 0.05):  fontSizePc = 10
+              else:               fontSizePc = 5
               self.response.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
             self.response.write("\n")
 
@@ -98,9 +102,6 @@ class FindTop5Words(webapp2.RequestHandler):
           except urllib2.URLError, e:
             self.response.write(e)
         self.response.write("</td></tr></table>\n")
-        self.response.write("<p><strong>Words ignored</strong>: %s</p>\n" % ((", ").join(sorted(CommonWords))))
-        self.response.write("<hr><p><strong>Note</strong>: If you use this tool, please respect Ke-Sen's bandwidth limits and only run it a few times, offline.</p>\n")
-
         rawWords = rawWords + "</ul>\n"
         self.response.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
 
