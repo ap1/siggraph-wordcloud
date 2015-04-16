@@ -36,7 +36,12 @@ HTML_POSTFIX = """\
 Years = ['2015', '2014', '2013', '2012', '2011', '2010', '2009', '2008']
 
 # lower case only
-CommonWords = ['and', 'or', 'for', 'of', 'by', 'is', 'a', 'with', 'using', 'in', 'from', 'the', '3d', 'on', 'via', 'to', 'an']
+CommonWords = ['and', 'or', 'for', 'of', 'by', 'is', 
+                'a', 'with', 'using', 'in', 'from', 'the', 
+                '3d', 'on', 'via', 'to', 'an', 'graphics']
+
+def RemoveHTMLComments(str):
+  return re.sub('<!--.*?-->', '', str, flags=re.DOTALL)
 
 # fetch a list of paper titles from ke-sen's page
 def GetPaperTitles(str):
@@ -67,7 +72,7 @@ class FindTop5Words(webapp2.RequestHandler):
         rawWords = "<ul>"
         for Year in Years:
           try:
-            webhtml = urlfetch.fetch("http://kesen.realtimerendering.com/sig%s.html" % Year).content
+            webhtml = RemoveHTMLComments(urlfetch.fetch("http://kesen.realtimerendering.com/sig%s.html" % Year).content)
 
             titles = GetPaperTitles(webhtml)
 
