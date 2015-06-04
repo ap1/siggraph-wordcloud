@@ -29,6 +29,23 @@ HTML_PREFIX = """\
 """
 
 HTML_POSTFIX = """\
+      <!-- Start of StatCounter Code for Default Guide -->
+      <script type="text/javascript">
+      var sc_project=10471620; 
+      var sc_invisible=1; 
+      var sc_security="81ba45aa"; 
+      var scJsHost = (("https:" == document.location.protocol) ?
+      "https://secure." : "http://www.");
+      document.write("<sc"+"ript type='text/javascript' src='" +
+      scJsHost+
+      "statcounter.com/counter/counter.js'></"+"script>");
+      </script>
+      <noscript><div class="statcounter"><a title="shopify traffic
+      stats" href="http://statcounter.com/shopify/"
+      target="_blank"><img class="statcounter"
+      src="http://c.statcounter.com/10471620/0/81ba45aa/1/"
+      alt="shopify traffic stats"></a></div></noscript>
+      <!-- End of StatCounter Code for Default Guide -->
       </body>
     </html>
 """
@@ -68,6 +85,7 @@ class FindTop5Words(webapp2.RequestHandler):
         self.response.write("<li>Using data from <a href=\"http://kesen.realtimerendering.com\">Ke-Sen Huang's page</a>. For source of this script, <a href=\"https://github.com/ap1/siggraph-wordcloud\">click here</a>.</li>\n")
         self.response.write("<li>Words ignored: %s</li>\n" % ((", ").join(sorted(CommonWords))))
         self.response.write("<li>If you use this tool, please respect Ke-Sen's bandwidth limits and only run it a few times, offline.</li>\n")
+        self.response.write("<li>Feedback: anjul dot patney at gmail dot com</li>\n")
         self.response.write("</ul>\n")
         rawWords = "<ul>"
         for Year in Years:
