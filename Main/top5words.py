@@ -108,6 +108,6 @@ class FindTop5Words(webapp2.RequestHandler):
             self.response.write(e)
         self.response.write("</td></tr></table>\n")
         rawWords = rawWords + "</ul>\n"
-        self.response.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
+        #self.response.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
 
         self.response.write(HTML_POSTFIX)
