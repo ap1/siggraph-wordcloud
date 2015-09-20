@@ -121,7 +121,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
     outFile.close()
 
 def revYearRange(beg, end):
-    return reversed([str(y) for y in range(beg, end)])
+    return reversed([str(y) for y in range(beg, end+1)])
 
 findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2015), "../sig.html")
 findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2015), "../siga.html")
