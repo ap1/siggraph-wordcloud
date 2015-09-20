@@ -1,18 +1,10 @@
 from google.appengine.ext import webapp
-from google.appengine.api import users
-from google.appengine.ext.webapp import template
 from google.appengine.api import urlfetch
-from google.appengine.api import mail
-from google.appengine.ext import ndb
-from datetime import datetime
-import cgi
 
 import urllib2
 
 import re
 import os
-
-import logging
 
 import webapp2
 
