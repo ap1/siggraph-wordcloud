@@ -89,30 +89,34 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
             titleWords  = RemoveCommonWords(titleWords)
             topWords    = GetTopWords(titleWords, 20)
             nWords      = len(titleWords)
-            outFile.write("<p class=\"topic_header\">%s %s (%d)</p>" % (title, Year, nWords))
 
-            for word in topWords:
-                fontSizePc = 100
-                freq = 100.0 * float(word[1])/float(nWords)
-                if  (freq > 1.0):   fontSizePc = 250
-                elif(freq > 0.9):   fontSizePc = 200
-                elif(freq > 0.8):   fontSizePc = 180
-                elif(freq > 0.7):   fontSizePc = 150
-                elif(freq > 0.6):   fontSizePc = 125
-                elif(freq > 0.5):   fontSizePc = 100
-                elif(freq > 0.4):   fontSizePc = 70
-                elif(freq > 0.3):   fontSizePc = 50
-                elif(freq > 0.2):   fontSizePc = 30
-                elif(freq > 0.1):   fontSizePc = 20
-                elif(freq > 0.05):  fontSizePc = 10
-                else:               fontSizePc = 5
-                outFile.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
+            if nWords > 10:
+              outFile.write("<p class=\"topic_header\">%s %s (%d)</p>" % (title, Year, nWords))
 
-            outFile.write("\n")
+              for word in topWords:
+                  fontSizePc = 100
+                  freq = 100.0 * float(word[1])/float(nWords)
+                  if  (freq > 1.0):   fontSizePc = 250
+                  elif(freq > 0.9):   fontSizePc = 200
+                  elif(freq > 0.8):   fontSizePc = 180
+                  elif(freq > 0.7):   fontSizePc = 150
+                  elif(freq > 0.6):   fontSizePc = 125
+                  elif(freq > 0.5):   fontSizePc = 100
+                  elif(freq > 0.4):   fontSizePc = 70
+                  elif(freq > 0.3):   fontSizePc = 50
+                  elif(freq > 0.2):   fontSizePc = 30
+                  elif(freq > 0.1):   fontSizePc = 20
+                  elif(freq > 0.05):  fontSizePc = 10
+                  else:               fontSizePc = 5
+                  outFile.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
 
-            rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
+              outFile.write("\n")
+
+              rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
+            else:
+              print "error"
         except urllib2.URLError, e:
-            outFile.write(e)
+            print (e)
     outFile.write("</td></tr></table>\n")
     rawWords = rawWords + "</ul>\n"
     #outFile.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
@@ -123,6 +127,6 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
 def revYearRange(beg, end):
     return reversed([str(y) for y in range(beg, end+1)])
 
-findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2015), "../sig.html")
-findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2015), "../siga.html")
+findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2025), "../sig.html")
+findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2025), "../siga.html")
 #findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, 2015), "hpg.html")
