@@ -40,7 +40,7 @@ HTML_POSTFIX = """\
 # lower case only
 CommonWords = ['and', 'or', 'for', 'of', 'by', 'is', 
                 'a', 'with', 'using', 'in', 'from', 'the', 
-                '3d', 'on', 'via', 'to', 'an', 'graphics']
+                '3d', 'on', 'via', 'to', 'an', 'graphics', 'design', ]
 
 def RemoveHTMLComments(str):
   return re.sub('<!--.*?-->', '', str, flags=re.DOTALL)
@@ -87,7 +87,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
             titles      = GetPaperTitles(webhtml)
             titleWords  = GetPaperTitleWords(titles)
             titleWords  = RemoveCommonWords(titleWords)
-            topWords    = GetTopWords(titleWords, 20)
+            topWords    = GetTopWords(titleWords, 10)
             nWords      = len(titleWords)
 
             if nWords > 10:
@@ -127,6 +127,6 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
 def revYearRange(beg, end):
     return reversed([str(y) for y in range(beg, end+1)])
 
-findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2025), "../sig.html")
-findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2025), "../siga.html")
+findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2020), "../sig.html")
+findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2020), "../siga.html")
 #findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, 2015), "hpg.html")
