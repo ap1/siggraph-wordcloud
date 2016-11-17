@@ -79,8 +79,9 @@ table.ex {
 	border-color:       black black black black;
 	border-collapse:    separate;
 	background-color:   #FEF9F8;
-	width:							90%;
+	width:							800px;
 	min-width: 					600px;
+	margin: 			auto;
   box-shadow:         -4px 4px 4px #999999, 4px 4px 4px #999999;
 }
 table.ex td {
