@@ -1,5 +1,4 @@
 import urlfetch
-import urllib2
 import re
 import os
 import collections
@@ -80,43 +79,49 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
     outFile.write("</ul>\n")
     rawWords = "<ul>"
     for Year in Years:
-        try:
-            fetchURL    = "http://kesen.realtimerendering.com/%s%s%s" % (prefix, Year, postfix)
-            print fetchURL
-            webhtml     = RemoveHTMLComments(urlfetch.fetch(fetchURL).content)
-            titles      = GetPaperTitles(webhtml)
-            titleWords  = GetPaperTitleWords(titles)
-            titleWords  = RemoveCommonWords(titleWords)
-            topWords    = GetTopWords(titleWords, 10)
-            nWords      = len(titleWords)
+        # try:
+        fetchURL    = "http://kesen.realtimerendering.com/%s%s%s" % (prefix, Year, postfix)
+        print (fetchURL)
 
-            if nWords > 10:
-              outFile.write("<p class=\"topic_header\">%s %s (%d)</p>" % (title, Year, nWords))
+        response = urlfetch.get(fetchURL)
+        if (response.status != 404):
 
-              for word in topWords:
-                  fontSizePc = 100
-                  freq = 100.0 * float(word[1])/float(nWords)
-                  if  (freq > 1.0):   fontSizePc = 250
-                  elif(freq > 0.9):   fontSizePc = 200
-                  elif(freq > 0.8):   fontSizePc = 180
-                  elif(freq > 0.7):   fontSizePc = 150
-                  elif(freq > 0.6):   fontSizePc = 125
-                  elif(freq > 0.5):   fontSizePc = 100
-                  elif(freq > 0.4):   fontSizePc = 70
-                  elif(freq > 0.3):   fontSizePc = 50
-                  elif(freq > 0.2):   fontSizePc = 30
-                  elif(freq > 0.1):   fontSizePc = 20
-                  elif(freq > 0.05):  fontSizePc = 10
-                  else:               fontSizePc = 5
-                  outFile.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
+          #print (response.content)
+          webhtml     = RemoveHTMLComments(str(response.content))
 
-              outFile.write("\n")
+          titles      = GetPaperTitles(webhtml)
+          titleWords  = GetPaperTitleWords(titles)
+          titleWords  = RemoveCommonWords(titleWords)
+          topWords    = GetTopWords(titleWords, 10)
+          nWords      = len(titleWords)
 
-              rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
-            else:
-              print "error"
-        except urllib2.URLError, e:
-            print (e)
+          if nWords > 10:
+            outFile.write("<p class=\"topic_header\">%s %s (%d)</p>" % (title, Year, nWords))
+
+            for word in topWords:
+                fontSizePc = 100
+                freq = 100.0 * float(word[1])/float(nWords)
+                if  (freq > 1.0):   fontSizePc = 250
+                elif(freq > 0.9):   fontSizePc = 200
+                elif(freq > 0.8):   fontSizePc = 180
+                elif(freq > 0.7):   fontSizePc = 150
+                elif(freq > 0.6):   fontSizePc = 125
+                elif(freq > 0.5):   fontSizePc = 100
+                elif(freq > 0.4):   fontSizePc = 70
+                elif(freq > 0.3):   fontSizePc = 50
+                elif(freq > 0.2):   fontSizePc = 30
+                elif(freq > 0.1):   fontSizePc = 20
+                elif(freq > 0.05):  fontSizePc = 10
+                else:               fontSizePc = 5
+                outFile.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
+
+            outFile.write("\n")
+
+            rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
+          else:
+            print ("error")
+          # except (urllib2.URLError, e):
+          #     print (e)
     outFile.write("</td></tr></table>\n")
     rawWords = rawWords + "</ul>\n"
     #outFile.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
