@@ -132,6 +132,6 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
 def revYearRange(beg, end):
     return reversed([str(y) for y in range(beg, end+1)])
 
-findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2020), "sig.html")
-findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2020), "siga.html")
-findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, 2020), "hpg.html")
+findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2025), "sig.html")
+findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2025), "siga.html")
+findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, 2025), "hpg.html")
