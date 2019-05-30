@@ -56,6 +56,12 @@ hr {
 	border-bottom:      0px solid #000;
 	/*text-transform:     lowercase;*/
 }
+
+.topic_header a{
+	color:              #ffffff;
+	text-decoration:    none;
+}
+
 b{
 	font-size:          120%;
 	/*font-variant:     small-caps;*/

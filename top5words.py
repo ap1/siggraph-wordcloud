@@ -96,7 +96,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                 nWords      = len(titleWords)
 
                 if nWords > 10:
-                  outFile.write("<p class=\"topic_header\">%s %s (%d)</p>" % (title, Year, nWords))
+                  outFile.write("<p class=\"topic_header\"><a href = %s>%s %s (%d)</a></p>" % (fetchURL, title, Year, nWords))
 
                   for word in topWords:
                       fontSizePc = 100
