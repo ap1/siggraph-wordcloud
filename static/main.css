@@ -1,6 +1,7 @@
 body{
-	font-family: 'Roboto Slab', serif;
+	/*font-family: 'Roboto Slab', serif;*/
 	/*font-family:      Helvetica, Arial, FreeSans, san-serif;*/
+	font-family:        'Source Sans Pro', sans-serif;
 	font-size:          14px;
 	color:              #333;
 	background-color:   #bbbbbb;
@@ -51,14 +52,14 @@ hr {
 	padding-bottom:     4px;
 	font-weight:        normal;
 	text-align:         left;
-	color:              #ffffff;
-	background-color:   #2B5360;
-	border-bottom:      0px solid #000;
+	color:              #0000ff;
+	background-color:   #eeeeee;
+	/*border-bottom:      1px solid #ddd;*/
 	/*text-transform:     lowercase;*/
 }
 
 .topic_header a{
-	color:              #ffffff;
+	color:              #0000ff;
 	text-decoration:    none;
 }
 
@@ -84,7 +85,7 @@ table.ex {
 	border-style:       solid solid solid solid;
 	border-color:       black black black black;
 	border-collapse:    separate;
-	background-color:   #FEF9F8;
+	background-color:   #FEFEFE;
 	width:							800px;
 	min-width: 					600px;
 	margin: 			auto;

@@ -2,12 +2,14 @@ import urllib.request
 import re
 import os
 import collections
+import math
 
 HTML_PREFIX = """\
     <html>
       <head>
         <title>SIGGRAPH Word Clouds</title>
         <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" type='text/css'>
         <link href="static/main.css" type="text/css" rel="stylesheet">
       </head>
       <body>
@@ -59,6 +61,9 @@ def GetTopWords(words, N):
   counter=collections.Counter(words)
   return counter.most_common(N)
 
+def isqrt(x):
+  fsqrt = math.sqrt(float(x))
+  return int(fsqrt)
 
 
 # ---------- #
@@ -100,20 +105,23 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
 
                   for word in topWords:
                       fontSizePc = 100
+                      textdarkness = 250
                       freq = 100.0 * float(word[1])/float(nWords)
-                      if  (freq > 1.0):   fontSizePc = 250
-                      elif(freq > 0.9):   fontSizePc = 200
-                      elif(freq > 0.8):   fontSizePc = 180
-                      elif(freq > 0.7):   fontSizePc = 150
-                      elif(freq > 0.6):   fontSizePc = 125
-                      elif(freq > 0.5):   fontSizePc = 100
-                      elif(freq > 0.4):   fontSizePc = 70
-                      elif(freq > 0.3):   fontSizePc = 50
-                      elif(freq > 0.2):   fontSizePc = 30
-                      elif(freq > 0.1):   fontSizePc = 20
-                      elif(freq > 0.05):  fontSizePc = 10
-                      else:               fontSizePc = 5
-                      outFile.write("<span style=\"font-size: %d%%;\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, word[0], word[1]))
+                      if  (freq > 1.0):   fontSizePc, textdarkness = 250, 250
+                      elif(freq > 0.9):   fontSizePc, textdarkness = 200, 225
+                      elif(freq > 0.8):   fontSizePc, textdarkness = 180, 200
+                      elif(freq > 0.7):   fontSizePc, textdarkness = 150, 150
+                      elif(freq > 0.6):   fontSizePc, textdarkness = 125, 100
+                      elif(freq > 0.5):   fontSizePc, textdarkness = 100, 50
+                      elif(freq > 0.4):   fontSizePc, textdarkness = 70, 40
+                      elif(freq > 0.3):   fontSizePc, textdarkness = 50, 40
+                      elif(freq > 0.2):   fontSizePc, textdarkness = 30, 40
+                      elif(freq > 0.1):   fontSizePc, textdarkness = 20, 40
+                      elif(freq > 0.05):  fontSizePc, textdarkness = 10, 40
+                      else:               fontSizePc, textdarkness = 5, 40
+
+                      textintensity = 255 - textdarkness
+                      outFile.write("<span style=\"font-size: %d%%; color: rgb(%d,%d,%d)\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, textintensity, textintensity, textintensity, word[0], word[1]))
 
                   outFile.write("\n")
 
