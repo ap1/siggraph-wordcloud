@@ -8,9 +8,10 @@ HTML_PREFIX = """\
     <html>
       <head>
         <title>SIGGRAPH Word Clouds</title>
-        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" type='text/css'>
-        <link href="static/main.css" type="text/css" rel="stylesheet">
+        <meta name="author" content="Anjul Patney">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+        <link href="static/main.css" rel="stylesheet" type="text/css">
       </head>
       <body>
 """
@@ -103,6 +104,8 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                 if nWords > 10:
                   outFile.write("<p class=\"topic_header\"><a href = %s>%s %s (%d)</a></p>" % (fetchURL, title, Year, nWords))
 
+                  outFile.write("\n<div class=\"topic_content\">\n")
+
                   for word in topWords:
                       fontSizePc = 100
                       textdarkness = 250
@@ -123,7 +126,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                       textintensity = 255 - textdarkness
                       outFile.write("<span style=\"font-size: %d%%; color: rgb(%d,%d,%d)\">%s</span> (%d) &nbsp;&nbsp;" % (fontSizePc, textintensity, textintensity, textintensity, word[0], word[1]))
 
-                  outFile.write("\n")
+                  outFile.write("\n</div>\n")
 
                   rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
                 else:
