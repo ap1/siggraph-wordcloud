@@ -1,8 +1,14 @@
-import urllib.request
+# import urllib.request
 import re
 import os
 import collections
 import math
+import sys
+# import lxml
+# from lxml import html
+import requests
+import time
+from datetime import datetime
 
 HTML_PREFIX = """\
     <html>
@@ -48,8 +54,11 @@ def RemoveHTMLComments(str):
   return re.sub('<!--.*?-->', '', str, flags=re.DOTALL)
 
 # fetch a list of paper titles from ke-sen's page
-def GetPaperTitles(str):
-  return re.findall('<dt><B>[^<]+</B>', str, flags=re.IGNORECASE)
+def GetPaperTitles(str, confname):
+  if confname == "CVPR":
+    return re.findall('<dt class=\"ptitle\"><br><a href=\"[^\"]+\">[^<]+</a></dt>', str, flags=re.IGNORECASE)
+  else:
+    return re.findall('<dt><B>[^<]+</B>', str, flags=re.IGNORECASE)
 
 # fetch words from paper titles, convert to lower case, remove special characters
 def GetPaperTitleWords(titles):
@@ -76,30 +85,39 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
     outFile.write(HTML_PREFIX)
     outFile.write("<table class=\"ex\"><tr><td>")
     outFile.write("<br><p class=\"page_title\">%s Paper Title Word Clouds</p>\n" % title)
-    outFile.write("<p>A very poor attempt to identify trends in graphics research.</p>\n")
+    outFile.write("<p>A very poor attempt to identify trends in graphics/ML research.</p>\n")
     outFile.write("<strong>Notes</strong><ul>\n")
-    outFile.write("<li>Using data from <a href=\"http://kesen.realtimerendering.com\">Ke-Sen Huang's page</a>. For source of this script, <a href=\"https://github.com/ap1/siggraph-wordcloud\">click here</a>.</li>\n")
+    if prefix == "CVPR":
+      outFile.write("<li>Using data from <a href=\"http://openaccess.thecvf.com\">CVPR Open Access Page</a>. For source of this script, <a href=\"https://github.com/ap1/siggraph-wordcloud\">click here</a>.</li>\n")
+    else:
+      outFile.write("<li>Using data from <a href=\"http://kesen.realtimerendering.com\">Ke-Sen Huang's page</a>. For source of this script, <a href=\"https://github.com/ap1/siggraph-wordcloud\">click here</a>.</li>\n")
     outFile.write("<li>Words ignored: %s</li>\n" % ((", ").join(sorted(CommonWords))))
-    outFile.write("<li>If you use this tool, please respect Ke-Sen's bandwidth limits and only run it a few times, offline.</li>\n")
+    outFile.write("<li>If you use this tool, please respect the host's bandwidth limits and only run it a few times, offline.</li>\n")
     outFile.write("<li>Feedback: anjul dot patney at gmail dot com</li>\n")
     outFile.write("</ul>\n")
     rawWords = "<ul>"
     for Year in Years:
         # try:
-        fetchURL    = "http://kesen.realtimerendering.com/%s%s%s" % (prefix, Year, postfix)
+        if prefix == "CVPR":
+          fetchURL = "http://openaccess.thecvf.com/%s%s%s" % (prefix, Year, postfix)
+        else:
+          fetchURL = "http://kesen.realtimerendering.com/%s%s%s" % (prefix, Year, postfix)
         print (fetchURL)
 
         try:
-            req = urllib.request.Request(fetchURL, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
-            with urllib.request.urlopen(req) as response:
+            # req = urllib.request.Request(fetchURL, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
+            time.sleep(0.5)
+            with requests.get(fetchURL) as page:
                 #print (response.content)
-                webhtml     = RemoveHTMLComments(str(response.read()))
+                webhtml     = RemoveHTMLComments(page.text)
 
-                titles      = GetPaperTitles(webhtml)
+                titles      = GetPaperTitles(webhtml, prefix)
                 titleWords  = GetPaperTitleWords(titles)
                 titleWords  = RemoveCommonWords(titleWords)
                 topWords    = GetTopWords(titleWords, 10)
                 nWords      = len(titleWords)
+
+                print("Found %d potentially useful words" % (nWords))
 
                 if nWords > 10:
                   outFile.write("<p class=\"topic_header\"><a href = %s>%s %s (%d)</a></p>" % (fetchURL, title, Year, nWords))
@@ -131,8 +149,8 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                   rawWords = rawWords + "<li><span style=\"font-size: 250%%\">%s %s</span><br>" % (title, Year) + (", ").join(titleWords) + "\n\n"
                 else:
                   print ("error")
-        except urllib.request.URLError as e:
-            print (e)
+        except: #urllib.request.URLError as e:
+            print ("Error: " + str(sys.exc_info()))
     outFile.write("</td></tr></table>\n")
     rawWords = rawWords + "</ul>\n"
     #outFile.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
@@ -143,6 +161,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
 def revYearRange(beg, end):
     return reversed([str(y) for y in range(beg, end+1)])
 
-findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, 2025), "sig.html")
-findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, 2025), "siga.html")
-findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, 2025), "hpg.html")
+findTop5Words("CVPR",   ".py",        "CVPR",           revYearRange(2013, datetime.today().year+1), "cvpr.html")
+findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, datetime.today().year+1), "sig.html")
+findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, datetime.today().year+1), "siga.html")
+findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, datetime.today().year+1), "hpg.html")
