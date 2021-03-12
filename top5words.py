@@ -81,6 +81,7 @@ def isqrt(x):
 # ---------- #
 
 def findTop5Words(prefix, postfix, title, Years, outFilename):
+    allWords = []
     outFile = open(outFilename, 'w')
     outFile.write(HTML_PREFIX)
     outFile.write("<table class=\"ex\"><tr><td>")
@@ -114,6 +115,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                 titles      = GetPaperTitles(webhtml, prefix)
                 titleWords  = GetPaperTitleWords(titles)
                 titleWords  = RemoveCommonWords(titleWords)
+                allWords    = allWords + titleWords
                 topWords    = GetTopWords(titleWords, 10)
                 nWords      = len(titleWords)
 
@@ -158,10 +160,27 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
     outFile.write(HTML_POSTFIX)
     outFile.close()
 
+    return allWords
+
 def revYearRange(beg, end):
     return reversed([str(y) for y in range(beg, end+1)])
 
-findTop5Words("CVPR",   ".py",        "CVPR",           revYearRange(2013, datetime.today().year+1), "cvpr.html")
-findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, datetime.today().year+1), "sig.html")
-findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, datetime.today().year+1), "siga.html")
-findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, datetime.today().year+1), "hpg.html")
+
+allWords = {}
+
+allWords["cvpr"] = findTop5Words("CVPR",   ".py",        "CVPR",           revYearRange(2013, datetime.today().year+1), "cvpr.html")
+allWords["sig"]  = findTop5Words("sig",    ".html",      "SIGGRAPH",       revYearRange(2008, datetime.today().year+1), "sig.html")
+allWords["siga"] = findTop5Words("siga",   "Papers.htm", "SIGGRAPH Asia",  revYearRange(2008, datetime.today().year+1), "siga.html")
+allWords["hpg"]  = findTop5Words("hpg",    "Papers.htm", "HPG",            revYearRange(2009, datetime.today().year+1), "hpg.html")
+allWords["egsr"] = findTop5Words("egsr",   "Papers.htm", "EGSR",           revYearRange(2009, datetime.today().year+1), "egsr.html")
+
+for awk in allWords.keys():
+  aw = allWords[awk]
+  aw = list(GetTopWords(aw, 500))
+  wordlist = ",".join([a[0] for a in aw])
+
+  f = open(awk + "_words.txt", "w")
+  f.write(wordlist)
+  f.close()
+
+
