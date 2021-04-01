@@ -106,9 +106,12 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
         print (fetchURL)
 
         try:
+            headers = {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
+            }
             # req = urllib.request.Request(fetchURL, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
             time.sleep(0.5)
-            with requests.get(fetchURL) as page:
+            with requests.get(fetchURL, headers=headers) as page:
                 #print (response.content)
                 webhtml     = RemoveHTMLComments(page.text)
 
@@ -120,6 +123,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                 nWords      = len(titleWords)
 
                 print("Found %d potentially useful words" % (nWords))
+                # print(page.text)
 
                 if nWords > 10:
                   outFile.write("<p class=\"topic_header\"><a href = %s>%s %s (%d)</a></p>" % (fetchURL, title, Year, nWords))
@@ -153,6 +157,7 @@ def findTop5Words(prefix, postfix, title, Years, outFilename):
                   print ("error")
         except: #urllib.request.URLError as e:
             print ("Error: " + str(sys.exc_info()))
+            return None
     outFile.write("</td></tr></table>\n")
     rawWords = rawWords + "</ul>\n"
     #outFile.write("<p><strong>Raw Words:</strong> " + rawWords + "\n")
