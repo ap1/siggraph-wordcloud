@@ -1,13 +1,26 @@
-# siggraph-wordcloud
-Tool to identify trends in SIGGRAPH and SIGGRAPH Asia. See the output at:
+# Conference paper-title trends
 
-http://ap1.github.io/siggraph-wordcloud/sig.html
-http://ap1.github.io/siggraph-wordcloud/siga.html
+A small static-site generator that visualizes recurring words in paper titles from SIGGRAPH, SIGGRAPH Asia, CVPR, High-Performance Graphics, and the Eurographics Symposium on Rendering.
 
-To be run offline, fetches data from Ke-Sen Huang's awesome page:
+Published pages: [SIGGRAPH](https://ap1.github.io/siggraph-wordcloud/sig.html), [SIGGRAPH Asia](https://ap1.github.io/siggraph-wordcloud/siga.html), and [CVPR](https://ap1.github.io/siggraph-wordcloud/cvpr.html).
 
-http://kesen.realtimerendering.com/
+## Generate pages
 
-To run standalone version: just run standalone/top5words.py
+Python 3.10+ and `requests` are required.
 
-(deprecated) To run Appengine version, load up the project in Google AppEngine launcher. Than run the server locally and open the landing page.
+```powershell
+python top5words.py sig
+python top5words.py cvpr
+python top5words.py sig siga cvpr
+```
+
+With no conference arguments, the script generates every configured page. It writes each HTML page and its companion `_words.txt` file atomically, so a failed fetch cannot truncate a previously generated result.
+
+Useful options:
+
+```powershell
+python top5words.py sig --start-year 2020 --end-year 2025 --delay 0
+python top5words.py --help
+```
+
+SIGGRAPH-family data comes from [Ke-Sen Huang's paper indexes](https://kesen.realtimerendering.com/); CVPR data comes from [CVF Open Access](https://openaccess.thecvf.com/). Please keep the default delay when regenerating the full history to respect those services' bandwidth.
